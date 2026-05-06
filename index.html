@@ -334,7 +334,7 @@ canvas.height = window.innerHeight;
 
 let particles = [];
 
-for(let i = 0; i < 120; i++) {
+for(let i = 0; i < 220; i++) {
 
     particles.push({
 
@@ -376,9 +376,9 @@ function drawParticles(audioLevel) {
         );
 
         ctx.fillStyle =
-            "rgba(193,160,80," + p.opacity + ")";
+            "rgba(255,215,80,0.95)";
 
-        ctx.shadowBlur = 20 + (audioLevel / 8);
+        ctx.shadowBlur = 45 + (audioLevel / 4);
 
         ctx.shadowColor = "#c1a050";
 
