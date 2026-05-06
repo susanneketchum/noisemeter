@@ -17,8 +17,6 @@ body {
     overflow: hidden;
     position: relative;
 
-
-
     font-family: Arial, Helvetica, sans-serif;
     color: white;
 
@@ -41,6 +39,10 @@ body {
 
     justify-content: center;
     align-items: center;
+
+    position: relative;
+
+    z-index: 1;
 }
 
 .title {
@@ -148,44 +150,17 @@ body {
     }
 }
 
-#particleCanvas {
-
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 100vw;
-    height: 100vh;
-
-    z-index: 0;
-
-    pointer-events: none;
-}
-
-.container {
-
-    position: relative;
-
-    z-index: 3;
-}
-
 </style>
 
 </head>
 
 <body>
 
-<canvas id="particleCanvas"></canvas>
-
-
 <div class="container">
-
 
 <div class="title" style="visibility:hidden;">
     PLACEHOLDER
 </div>
-
 
     <div class="db" id="dbValue">
         85.0
@@ -236,11 +211,8 @@ navigator.mediaDevices.getUserMedia({ audio: true })
             values += dataArray[i];
         }
 
-let average =
-    values / dataArray.length;
-
-window.currentAudioLevel = average;
-
+        let average =
+            values / dataArray.length;
 
         // Fake arena-style dB scaling
         let fakeDb =
@@ -294,11 +266,11 @@ window.currentAudioLevel = average;
         let hypeText = "LET'S GO!";
 
         if(fakeDb > 115) {
-            hypeText = "LET EM **C**** KNOW!";
+            hypeText = "LET EM KNOW!";
         }
 
         else if(fakeDb > 105) {
-            hypeText = "LOUDER";
+            hypeText = "LOUDER!";
         }
 
         else if(fakeDb > 95) {
@@ -320,80 +292,6 @@ window.currentAudioLevel = average;
 
     console.log(err);
 });
-
-// PARTICLE SYSTEM
-
-const canvas =
-    document.getElementById("particleCanvas");
-
-const ctx =
-    canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-for(let i = 0; i < 80; i++) {
-
-
-particles.push({
-
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-
-    size: Math.random() * 12 + 4,
-
-    speedX: (Math.random() - 0.5) * 0.25,
-    speedY: (Math.random() - 0.5) * 0.25,
-
-    opacity: Math.random() * 0.15 + 0.05
-});
-
-
-function drawParticles(audioLevel) {
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    particles.forEach(p => {
-
-        p.x += p.speedX * (audioLevel / 40);
-        p.y += p.speedY * (audioLevel / 40);
-
-        if(p.x < 0) p.x = canvas.width;
-        if(p.x > canvas.width) p.x = 0;
-
-        if(p.y < 0) p.y = canvas.height;
-        if(p.y > canvas.height) p.y = 0;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size + (audioLevel / 80),
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle =
-            "rgba(255,215,120," + p.opacity + ")";
-
-        ctx.shadowBlur = 80;
-
-
-        ctx.shadowColor = "#c1a050";
-
-        ctx.fill();
-    });
-
-    requestAnimationFrame(() =>
-        drawParticles(window.currentAudioLevel || 0)
-    );
-}
-
-drawParticles(0);
-
 
 </script>
 
