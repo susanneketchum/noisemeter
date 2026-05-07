@@ -251,7 +251,7 @@ if(fakeDb > peakDb) {
 // Hold peak for 2 seconds
 if(Date.now() - peakHoldTimer > 1000) {
 
-    peakDb -= 0.3;
+    peakDb -= 0.15;
 }
 
 // Prevent falling below current level
