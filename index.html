@@ -206,6 +206,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         new Uint8Array(analyser.frequencyBinCount);
 
     let lastUpdate = 0;
+    let peakDb = 70; let peakHoldTimer = 0;
 
     function updateMeter() {
 
@@ -238,10 +239,31 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         // Clamp values
         if(fakeDb < 70) fakeDb = 70;
         if(fakeDb > 125) fakeDb = 125;
+// Peak hold logic
+
+if(fakeDb > peakDb) {
+
+    peakDb = fakeDb;
+
+    peakHoldTimer = Date.now();
+}
+
+// Hold peak for 2 seconds
+if(Date.now() - peakHoldTimer > 2000) {
+
+    peakDb -= 0.5;
+}
+
+// Prevent falling below current level
+if(peakDb < fakeDb) {
+
+    peakDb = fakeDb;
+}
+        
 
         // Update number
         document.getElementById("dbValue")
-            .innerText = fakeDb.toFixed(1);
+           .innerText = Math.round(peakDb);
 
         // Meter %
         let percent =
