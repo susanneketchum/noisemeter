@@ -263,7 +263,7 @@ if(peakDb < fakeDb) {
 
         // Update number
         document.getElementById("dbValue")
-           .innerText = Math.round(peakDb);
+           .innerText = peakDb.toFixed(1);
 
         // Meter %
         let percent =
