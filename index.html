@@ -5,6 +5,8 @@
 
 <meta charset="UTF-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>Crowd Noise Meter</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
@@ -43,6 +45,10 @@ body {
     position: relative;
 
     z-index: 1;
+
+    padding: 5vw;
+
+    box-sizing: border-box;
 }
 
 .title {
@@ -72,7 +78,7 @@ body {
 
     font-family: 'Anton', sans-serif;
 
-    font-size: 14vw;
+    font-size: min(26vw, 220px);
 
     line-height: 1;
 
@@ -83,7 +89,7 @@ body {
 
 .label {
 
-    font-size: 2.5vw;
+    font-size: min(5vw, 40px);
 
     margin-top: 1vh;
 
@@ -96,7 +102,7 @@ body {
 
     width: 65vw;
 
-    height: 8vh;
+    height: min(5vh, 40px);
 
     border: 3px solid white;
 
@@ -126,7 +132,7 @@ body {
 
     font-family: 'Anton', sans-serif;
 
-    font-size: 5vw;
+    font-size: min(8vw, 60px);
 
     letter-spacing: 0.1vw;
 
@@ -195,17 +201,26 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         audioContext.createAnalyser();
 
     analyser.fftSize = 256;
-    analyser.smoothingTimeConstant = 0.8;
 
     microphone.connect(analyser);
 
     const dataArray =
         new Uint8Array(analyser.frequencyBinCount);
-        let displayedDb = 85;
+
+    let lastUpdate = 0;
 
     function updateMeter() {
 
         analyser.getByteFrequencyData(dataArray);
+
+        const now = Date.now();
+
+        if(now - lastUpdate < 150) {
+            requestAnimationFrame(updateMeter);
+            return;
+        }
+
+        lastUpdate = now;
 
         let values = 0;
 
@@ -225,16 +240,14 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         // Clamp values
         if(fakeDb < 70) fakeDb = 70;
         if(fakeDb > 125) fakeDb = 125;
-        // Smooth the displayed value 
-        displayedDb += (fakeDb - displayedDb) * 0.2;
 
         // Update number
         document.getElementById("dbValue")
-            .innerText = displayedDb.toFixed(1);
+            .innerText = fakeDb.toFixed(1);
 
         // Meter %
         let percent =
-            ((displayedDb - 70) / 55) * 100;
+            ((fakeDb - 70) / 55) * 100;
 
         const meter =
             document.getElementById("meterFill");
@@ -242,7 +255,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         meter.style.width = percent + "%";
 
         // Meter + number colors
-        if(displayedDb < 95) {
+        if(fakeDb < 95) {
 
             meter.style.background = "lime";
 
@@ -250,7 +263,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
                 .style.color = "lime";
         }
 
-        else if(displayedDb < 100) {
+        else if(fakeDb < 100) {
 
             meter.style.background = "yellow";
 
@@ -269,15 +282,15 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         // Dynamic hype text
         let hypeText = "LET'S GO!";
 
-        if(displayedDb > 115) {
-            hypeText = "LET EM KNOW!";
+        if(fakeDb > 115) {
+            hypeText = "LET EM **C**** KNOW!";
         }
 
-        else if(displayedDb > 105) {
+        else if(fakeDb > 105) {
             hypeText = "LOUDER!";
         }
 
-        else if(displayedDb > 95) {
+        else if(fakeDb > 95) {
             hypeText = "MAKE SOME NOISE!";
         }
 
