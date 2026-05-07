@@ -267,7 +267,7 @@ if(peakDb < fakeDb) {
 
         // Meter %
         let percent =
-            ((fakeDb - 70) / 55) * 100;
+            ((peakDb - 70) / 55) * 100;
 
         const meter =
             document.getElementById("meterFill");
@@ -275,7 +275,7 @@ if(peakDb < fakeDb) {
         meter.style.width = percent + "%";
 
         // Meter + number colors
-        if(fakeDb < 95) {
+        if(peakDb < 95) {
 
             meter.style.background = "lime";
 
@@ -283,7 +283,7 @@ if(peakDb < fakeDb) {
                 .style.color = "lime";
         }
 
-        else if(fakeDb < 100) {
+        else if(peakDb < 100) {
 
             meter.style.background = "yellow";
 
@@ -302,15 +302,15 @@ if(peakDb < fakeDb) {
         // Dynamic hype text
         let hypeText = "LET'S GO!";
 
-        if(fakeDb > 115) {
+        if(peakDb > 115) {
             hypeText = "LET EM **C**** KNOW!";
         }
 
-        else if(fakeDb > 105) {
+        else if(peakDb > 105) {
             hypeText = "LOUDER!";
         }
 
-        else if(fakeDb > 95) {
+        else if(peakDb > 95) {
             hypeText = "MAKE SOME NOISE!";
         }
 
