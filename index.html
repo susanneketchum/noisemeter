@@ -200,6 +200,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
     const dataArray =
         new Uint8Array(analyser.frequencyBinCount);
+        let displayedDb = 85;
 
     function updateMeter() {
 
@@ -223,14 +224,15 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         // Clamp values
         if(fakeDb < 70) fakeDb = 70;
         if(fakeDb > 125) fakeDb = 125;
+        // Smooth the displayed value displayedDb += (fakeDb - displayedDb) * 0.08;
 
         // Update number
         document.getElementById("dbValue")
-            .innerText = fakeDb;
+            .innerText = displayedDb.toFixed(1);
 
         // Meter %
         let percent =
-            ((fakeDb - 70) / 55) * 100;
+            ((displayedDb - 70) / 55) * 100;
 
         const meter =
             document.getElementById("meterFill");
@@ -238,7 +240,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         meter.style.width = percent + "%";
 
         // Meter + number colors
-        if(fakeDb < 95) {
+        if(displayedDb < 95) {
 
             meter.style.background = "lime";
 
@@ -246,7 +248,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
                 .style.color = "lime";
         }
 
-        else if(fakeDb < 100) {
+        else if(displayedDb < 100) {
 
             meter.style.background = "yellow";
 
@@ -265,15 +267,15 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         // Dynamic hype text
         let hypeText = "LET'S GO!";
 
-        if(fakeDb > 115) {
+        if(displayedDb > 115) {
             hypeText = "LET EM KNOW!";
         }
 
-        else if(fakeDb > 105) {
+        else if(displayedDb > 105) {
             hypeText = "LOUDER!";
         }
 
-        else if(fakeDb > 95) {
+        else if(displayedDb > 95) {
             hypeText = "MAKE SOME NOISE!";
         }
 
