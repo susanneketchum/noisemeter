@@ -195,6 +195,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         audioContext.createAnalyser();
 
     analyser.fftSize = 256;
+    analyser.smoothingTimeConstant = 0.8;
 
     microphone.connect(analyser);
 
