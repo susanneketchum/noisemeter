@@ -248,17 +248,17 @@ if(fakeDb > peakDb) {
     peakHoldTimer = Date.now();
 }
 
-// Hold peak for 0.5 seconds
-if(Date.now() - peakHoldTimer > 500) {
+// Tiny hold
+if(Date.now() - peakHoldTimer > 180) {
 
-    peakDb -= 0.15;
+    peakDb -= 1.2;
 }
 
-// Prevent falling below current level
 if(peakDb < fakeDb) {
 
     peakDb = fakeDb;
 }
+
         
 
         // Update number
