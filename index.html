@@ -225,7 +225,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         if(fakeDb < 70) fakeDb = 70;
         if(fakeDb > 125) fakeDb = 125;
         // Smooth the displayed value 
-        displayedDb += (fakeDb - displayedDb) * 0.05;
+        displayedDb += (fakeDb - displayedDb) * 0.2;
 
         // Update number
         document.getElementById("dbValue")
