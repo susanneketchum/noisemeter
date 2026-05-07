@@ -249,7 +249,7 @@ if(fakeDb > peakDb) {
 }
 
 // Hold peak for 2 seconds
-if(Date.now() - peakHoldTimer > 3000) {
+if(Date.now() - peakHoldTimer > 2000) {
 
     peakDb -= 0.3;
 }
