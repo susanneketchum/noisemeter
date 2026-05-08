@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Crowd Noise Meter v38</title>
+<title>Crowd Noise Meter v39</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 
@@ -76,8 +76,6 @@ body {
 
     line-height: 1;
 
-    color: #ffffff;
-
     background: linear-gradient(
         to bottom,
         #ffffff 0%,
@@ -125,6 +123,8 @@ body {
 
 .hype-plate {
 
+    position: relative;
+
     margin-top: 2vh;
 
     padding:
@@ -141,16 +141,6 @@ body {
     border:
         4px solid #e6c46a;
 
-    clip-path:
-        polygon(
-            6% 0%,
-            94% 0%,
-            100% 50%,
-            94% 100%,
-            6% 100%,
-            0% 50%
-        );
-
     box-shadow:
         0 6px 0 #5a3b0d,
         0 12px 24px rgba(0,0,0,0.6),
@@ -160,6 +150,68 @@ body {
         perspective(600px)
         rotateX(8deg);
 }
+
+/* LEFT ANGLE */
+
+.hype-plate::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -4px;
+    left: -34px;
+
+    width: 40px;
+    height: calc(100% + 8px);
+
+    background:
+        linear-gradient(
+            to bottom,
+            #f3d27a 0%,
+            #b88a2d 45%,
+            #6e4b12 100%
+        );
+
+    border:
+        4px solid #e6c46a;
+
+    transform: skewX(-30deg);
+
+    z-index: -1;
+}
+
+/* RIGHT ANGLE */
+
+.hype-plate::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: -4px;
+    right: -34px;
+
+    width: 40px;
+    height: calc(100% + 8px);
+
+    background:
+        linear-gradient(
+            to bottom,
+            #f3d27a 0%,
+            #b88a2d 45%,
+            #6e4b12 100%
+        );
+
+    border:
+        4px solid #e6c46a;
+
+    transform: skewX(30deg);
+
+    z-index: -1;
+}
+
+/* HYPE TEXT */
 
 .hype {
 
