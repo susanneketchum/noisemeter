@@ -21,69 +21,116 @@ body {
 }
 
 /* VIDEO BACKGROUND */
+
 #bgVideo {
     position: fixed;
     top: 0;
     left: 0;
+
     width: 100vw;
     height: 100vh;
+
     object-fit: cover;
+
     z-index: -2;
 }
 
 /* MAIN LAYOUT */
+
 .container {
+
     width: 100vw;
     height: 100vh;
 
     display: flex;
     flex-direction: column;
+
     align-items: center;
     justify-content: flex-start;
 
-    padding-top: 70vh;
+    padding-top: 26vh;
+
     box-sizing: border-box;
 
     position: relative;
+
     z-index: 2;
 }
 
-/* NUMBER + DB LOCKUP */
+/* NUMBER LOCKUP */
+
 .db-wrapper {
+
     display: flex;
+
     align-items: baseline;
+
     gap: 1vw;
 }
 
 .db {
+
     font-family: 'Anton', sans-serif;
+
     font-size: min(22vw, 260px);
+
     line-height: 1;
-    color: lime;
+
+    background: linear-gradient(
+        to bottom,
+        #ffffff 0%,
+        #f2f2f2 30%,
+        #d4d4d4 55%,
+        #ffffff 100%
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    -webkit-text-stroke: 6px #b08a3d;
 
     text-shadow:
-        0 0 20px rgba(0,0,0,0.8),
-        6px 6px 12px rgba(0,0,0,0.6);
+        0 3px 0 #7a5a21,
+        0 6px 0 #5d4318,
+        6px 8px 14px rgba(0,0,0,0.65);
 }
 
 .db-unit {
+
     font-family: 'Anton', sans-serif;
+
     font-size: min(8vw, 100px);
-    color: white;
+
+    background: linear-gradient(
+        to bottom,
+        #ffffff 0%,
+        #e6e6e6 45%,
+        #cfcfcf 100%
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    -webkit-text-stroke: 3px #b08a3d;
 
     text-shadow:
-        0 0 20px rgba(0,0,0,0.8),
-        4px 4px 10px rgba(0,0,0,0.6);
+        0 2px 0 #7a5a21,
+        0 4px 0 #5d4318,
+        4px 6px 10px rgba(0,0,0,0.6);
 }
 
 /* HYPE TEXT */
+
 .hype {
+
     margin-top: 2vh;
 
     font-family: 'Anton', sans-serif;
+
     font-size: min(5vw, 52px);
 
     letter-spacing: 0.05em;
+
     color: white;
 
     text-shadow:
@@ -94,9 +141,18 @@ body {
 }
 
 @keyframes pulse {
-    0%   { transform: scale(1); }
-    50%  { transform: scale(1.06); }
-    100% { transform: scale(1); }
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.06);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 </style>
@@ -112,8 +168,15 @@ body {
 <div class="container">
 
     <div class="db-wrapper">
-        <div class="db" id="dbValue">85.0</div>
-        <div class="db-unit">dB</div>
+
+        <div class="db" id="dbValue">
+            85.0
+        </div>
+
+        <div class="db-unit">
+            dB
+        </div>
+
     </div>
 
     <div class="hype" id="hypeText">
@@ -128,17 +191,26 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
 .then(function(stream) {
 
-    const audioContext = new AudioContext();
-    const microphone = audioContext.createMediaStreamSource(stream);
-    const analyser = audioContext.createAnalyser();
+    const audioContext =
+        new AudioContext();
+
+    const microphone =
+        audioContext.createMediaStreamSource(stream);
+
+    const analyser =
+        audioContext.createAnalyser();
 
     analyser.fftSize = 256;
+
     microphone.connect(analyser);
 
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    const dataArray =
+        new Uint8Array(analyser.frequencyBinCount);
 
     let lastUpdate = 0;
+
     let peakDb = 70;
+
     let peakHoldTimer = 0;
 
     function updateMeter() {
@@ -147,8 +219,10 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
         const now = Date.now();
 
-        if (now - lastUpdate < 150) {
+        if(now - lastUpdate < 150) {
+
             requestAnimationFrame(updateMeter);
+
             return;
         }
 
@@ -156,67 +230,74 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
         let values = 0;
 
-        for (let i = 0; i < dataArray.length; i++) {
+        for(let i = 0; i < dataArray.length; i++) {
+
             values += dataArray[i];
         }
 
-        let average = values / dataArray.length;
+        let average =
+            values / dataArray.length;
 
-        let fakeDb = parseFloat(
-            ((average * 0.6) + 70).toFixed(1)
-        );
+        /* FAKE DB SCALE */
 
-        if (fakeDb < 70) fakeDb = 70;
-        if (fakeDb > 125) fakeDb = 125;
+        let fakeDb =
+            parseFloat(
+                ((average * 0.6) + 70).toFixed(1)
+            );
+
+        /* CLAMP */
+
+        if(fakeDb < 70) fakeDb = 70;
+
+        if(fakeDb > 125) fakeDb = 125;
 
         /* PEAK HOLD */
-        if (fakeDb > peakDb) {
+
+        if(fakeDb > peakDb) {
+
             peakDb = fakeDb;
+
             peakHoldTimer = Date.now();
         }
 
         /* QUICK DECAY */
-        if (Date.now() - peakHoldTimer > 180) {
+
+        if(Date.now() - peakHoldTimer > 180) {
+
             peakDb -= 2.8;
         }
 
-        if (peakDb < fakeDb) {
+        if(peakDb < fakeDb) {
+
             peakDb = fakeDb;
         }
 
         /* UPDATE NUMBER */
-        document.getElementById("dbValue").innerText =
-            peakDb.toFixed(1);
 
-        /* COLORS */
-        if (peakDb < 95) {
-            document.getElementById("dbValue").style.color = "lime";
-        }
-
-        else if (peakDb < 105) {
-            document.getElementById("dbValue").style.color = "yellow";
-        }
-
-        else {
-            document.getElementById("dbValue").style.color = "red";
-        }
+        document.getElementById("dbValue")
+            .innerText = peakDb.toFixed(1);
 
         /* HYPE TEXT */
+
         let hypeText = "LET'S GO!";
 
-        if (peakDb > 115) {
+        if(peakDb > 115) {
+
             hypeText = "LET EM KNOW!";
         }
 
-        else if (peakDb > 105) {
+        else if(peakDb > 105) {
+
             hypeText = "LOUDER!";
         }
 
-        else if (peakDb > 95) {
+        else if(peakDb > 95) {
+
             hypeText = "MAKE SOME NOISE!";
         }
 
-        document.getElementById("hypeText").innerText = hypeText;
+        document.getElementById("hypeText")
+            .innerText = hypeText;
 
         requestAnimationFrame(updateMeter);
     }
@@ -225,11 +306,14 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 })
 
 .catch(function(err) {
+
     alert("Microphone access denied.");
+
     console.log(err);
 });
 
 </script>
 
 </body>
+
 </html>
