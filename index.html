@@ -4,11 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Crowd Noise Meter</title>
 
@@ -31,141 +27,76 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    object-fit: contain;
-    background: black;
+    object-fit: cover;
     z-index: -2;
 }
 
-/* DARK OVERLAY */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.25);
-    z-index: -1;
-}
-
+/* MAIN LAYOUT */
 .container {
     width: 100vw;
     height: 100vh;
+
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    position: relative;
-    z-index: 1;
-    padding: 5vw;
+    justify-content: flex-start;
+
+    padding-top: 26vh;
     box-sizing: border-box;
+
+    position: relative;
+    z-index: 2;
 }
 
-.title {
-    font-family: 'Anton', sans-serif;
-    font-size: 10vw;
-    letter-spacing: 0.06vw;
-    line-height: 0.95;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 2vh;
-    color: #c1a050;
-    text-shadow:
-        0 0 10px rgba(0,0,0,0.8),
-        0 0 25px rgba(0,0,0,0.6);
+/* NUMBER + DB LOCKUP */
+.db-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 1vw;
 }
 
 .db {
     font-family: 'Anton', sans-serif;
-    font-size: min(26vw, 220px);
+    font-size: min(22vw, 260px);
     line-height: 1;
+    color: lime;
+
     text-shadow:
-        0 0 15px rgba(0,0,0,0.8),
-        0 0 30px rgba(0,0,0,0.5);
+        0 0 20px rgba(0,0,0,0.8),
+        6px 6px 12px rgba(0,0,0,0.6);
 }
 
-.label {
-    font-size: min(5vw, 40px);
-    margin-top: 1vh;
-    letter-spacing: 0.2vw;
-    text-shadow: 0 0 15px black;
-}
-
-.meter-container {
-    width: 65vw;
-    height: min(9vh, 80px);
-    border: 3px solid white;
-    border-radius: 12px;
-    margin-top: 4vh;
-    overflow: hidden;
-    background: rgba(255,255,255,0.15);
-}
-
-.meter-fill {
-    height: 100%;
-    width: 10%;
-    border-radius: 8px;
-    background: lime;
-    transition:
-        width 0.18s ease-out,
-        background 0.15s linear;
-    filter: blur(0.5px);
-}
-
-.hype {
-    margin-top: 4vh;
+.db-unit {
     font-family: 'Anton', sans-serif;
-    font-size: min(8vw, 60px);
-    letter-spacing: 0.1vw;
+    font-size: min(8vw, 100px);
+    color: white;
+
+    text-shadow:
+        0 0 20px rgba(0,0,0,0.8),
+        4px 4px 10px rgba(0,0,0,0.6);
+}
+
+/* HYPE TEXT */
+.hype {
+    margin-top: 2vh;
+
+    font-family: 'Anton', sans-serif;
+    font-size: min(5vw, 52px);
+
+    letter-spacing: 0.05em;
+    color: white;
+
+    text-shadow:
+        0 0 20px rgba(0,0,0,0.9),
+        4px 4px 10px rgba(0,0,0,0.6);
+
     animation: pulse 1s infinite;
-    text-shadow: 0 0 20px black;
 }
 
 @keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.08);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-@media (max-width: 768px) {
-
-    body {
-        background-image: url('AEB5FC94-AF1B-4001-890D-DDC2BC6ECCE8.png');
-        background-position: center top;
-    }
-
-    .container {
-        justify-content: center;
-        padding-top: 8vh;
-        padding-bottom: 8vh;
-    }
-
-    .db {
-        font-size: 34vw;
-        line-height: 0.9;
-    }
-
-    .label {
-        font-size: 6vw;
-        margin-top: 1vh;
-    }
-
-    .meter-container {
-        width: 82vw;
-        height: 5vh;
-        margin-top: 3vh;
-    }
-
-    .hype {
-        font-size: 10vw;
-        margin-top: 3vh;
-        text-align: center;
-    }
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
 }
 
 </style>
@@ -174,26 +105,15 @@ body::before {
 
 <body>
 
-<video autoplay muted loop id="bgVideo">
+<video autoplay muted loop playsinline id="bgVideo">
     <source src="motion.mp4" type="video/mp4">
 </video>
 
 <div class="container">
 
-<div class="title" style="visibility:hidden;">
-    PLACEHOLDER
-</div>
-
-    <div class="db" id="dbValue">
-        85.0
-    </div>
-
-    <div class="label">
-        ENERGY LEVEL
-    </div>
-
-    <div class="meter-container">
-        <div class="meter-fill" id="meterFill"></div>
+    <div class="db-wrapper">
+        <div class="db" id="dbValue">85.0</div>
+        <div class="db-unit">dB</div>
     </div>
 
     <div class="hype" id="hypeText">
@@ -209,19 +129,13 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 .then(function(stream) {
 
     const audioContext = new AudioContext();
-
-    const microphone =
-        audioContext.createMediaStreamSource(stream);
-
-    const analyser =
-        audioContext.createAnalyser();
+    const microphone = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
 
     analyser.fftSize = 256;
-
     microphone.connect(analyser);
 
-    const dataArray =
-        new Uint8Array(analyser.frequencyBinCount);
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
     let lastUpdate = 0;
     let peakDb = 70;
@@ -233,7 +147,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
         const now = Date.now();
 
-        if(now - lastUpdate < 150) {
+        if (now - lastUpdate < 150) {
             requestAnimationFrame(updateMeter);
             return;
         }
@@ -242,76 +156,67 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
         let values = 0;
 
-        for(let i = 0; i < dataArray.length; i++) {
+        for (let i = 0; i < dataArray.length; i++) {
             values += dataArray[i];
         }
 
-        let average =
-            values / dataArray.length;
+        let average = values / dataArray.length;
 
-        let fakeDb =
-            parseFloat(
-                ((average * 0.6) + 70).toFixed(1)
-            );
+        let fakeDb = parseFloat(
+            ((average * 0.6) + 70).toFixed(1)
+        );
 
-        if(fakeDb < 70) fakeDb = 70;
-        if(fakeDb > 125) fakeDb = 125;
+        if (fakeDb < 70) fakeDb = 70;
+        if (fakeDb > 125) fakeDb = 125;
 
-        if(fakeDb > peakDb) {
+        /* PEAK HOLD */
+        if (fakeDb > peakDb) {
             peakDb = fakeDb;
             peakHoldTimer = Date.now();
         }
 
-        if(Date.now() - peakHoldTimer > 180) {
+        /* QUICK DECAY */
+        if (Date.now() - peakHoldTimer > 180) {
             peakDb -= 2.8;
         }
 
-        if(peakDb < fakeDb) {
+        if (peakDb < fakeDb) {
             peakDb = fakeDb;
         }
 
-        document.getElementById("dbValue")
-           .innerText = peakDb.toFixed(1);
+        /* UPDATE NUMBER */
+        document.getElementById("dbValue").innerText =
+            peakDb.toFixed(1);
 
-        let percent =
-            ((peakDb - 70) / 55) * 100;
-
-        const meter =
-            document.getElementById("meterFill");
-
-        meter.style.width = percent + "%";
-
-        if(peakDb < 95) {
-            meter.style.background = "lime";
+        /* COLORS */
+        if (peakDb < 95) {
             document.getElementById("dbValue").style.color = "lime";
         }
 
-        else if(peakDb < 100) {
-            meter.style.background = "yellow";
+        else if (peakDb < 105) {
             document.getElementById("dbValue").style.color = "yellow";
         }
 
         else {
-            meter.style.background = "red";
             document.getElementById("dbValue").style.color = "red";
         }
 
+        /* HYPE TEXT */
         let hypeText = "LET'S GO!";
 
-        if(peakDb > 115) {
-            hypeText = "LET EM **C**** KNOW!";
+        if (peakDb > 115) {
+            hypeText = "LET EM KNOW!";
         }
 
-        else if(peakDb > 105) {
+        else if (peakDb > 105) {
             hypeText = "LOUDER!";
         }
 
-        else if(peakDb > 95) {
+        else if (peakDb > 95) {
             hypeText = "MAKE SOME NOISE!";
         }
 
-        document.getElementById("hypeText")
-            .innerText = hypeText;
+        document.getElementById("hypeText").innerText = hypeText;
 
         requestAnimationFrame(updateMeter);
     }
