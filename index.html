@@ -6,8 +6,9 @@
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <meta name="apple-mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <title>Crowd Noise Meter</title>
 
@@ -16,132 +17,108 @@
 <style>
 
 body {
-
     margin: 0;
     overflow: hidden;
     position: relative;
-
     font-family: Arial, Helvetica, sans-serif;
     color: white;
 }
 
-.container {
-
+/* VIDEO BACKGROUND */
+#bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
+    object-fit: contain;
+    background: black;
+    z-index: -2;
+}
 
+/* DARK OVERLAY */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.25);
+    z-index: -1;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-
     justify-content: center;
     align-items: center;
-
     position: relative;
-
     z-index: 1;
-
     padding: 5vw;
-
     box-sizing: border-box;
 }
 
 .title {
-
     font-family: 'Anton', sans-serif;
-
     font-size: 10vw;
-
     letter-spacing: 0.06vw;
-
     line-height: 0.95;
-
     text-transform: uppercase;
-
     text-align: center;
-
     margin-bottom: 2vh;
-
     color: #c1a050;
-
     text-shadow:
         0 0 10px rgba(0,0,0,0.8),
         0 0 25px rgba(0,0,0,0.6);
 }
 
 .db {
-
     font-family: 'Anton', sans-serif;
-
     font-size: min(26vw, 220px);
-
     line-height: 1;
-
     text-shadow:
         0 0 15px rgba(0,0,0,0.8),
         0 0 30px rgba(0,0,0,0.5);
 }
 
 .label {
-
     font-size: min(5vw, 40px);
-
     margin-top: 1vh;
-
     letter-spacing: 0.2vw;
-
     text-shadow: 0 0 15px black;
 }
 
 .meter-container {
-
     width: 65vw;
-
     height: min(9vh, 80px);
-
     border: 3px solid white;
-
     border-radius: 12px;
-
     margin-top: 4vh;
-
     overflow: hidden;
-
     background: rgba(255,255,255,0.15);
 }
 
 .meter-fill {
-
     height: 100%;
-
     width: 10%;
-    
     border-radius: 8px;
-
     background: lime;
-
-   transition: 
-       width 0.18s ease-out, 
-       background 0.15s linear; 
+    transition:
+        width 0.18s ease-out,
+        background 0.15s linear;
     filter: blur(0.5px);
 }
 
 .hype {
-
     margin-top: 4vh;
-
     font-family: 'Anton', sans-serif;
-
     font-size: min(8vw, 60px);
-
     letter-spacing: 0.1vw;
-
     animation: pulse 1s infinite;
-
     text-shadow: 0 0 20px black;
 }
 
 @keyframes pulse {
-
     0% {
         transform: scale(1);
     }
@@ -154,62 +131,39 @@ body {
         transform: scale(1);
     }
 }
+
 @media (max-width: 768px) {
 
     body {
-
         background-image: url('AEB5FC94-AF1B-4001-890D-DDC2BC6ECCE8.png');
-
         background-position: center top;
     }
 
     .container {
-
         justify-content: center;
-
         padding-top: 8vh;
         padding-bottom: 8vh;
     }
 
     .db {
-
         font-size: 34vw;
-
         line-height: 0.9;
     }
 
     .label {
-
         font-size: 6vw;
-
         margin-top: 1vh;
     }
 
     .meter-container {
-
         width: 82vw;
-
         height: 5vh;
-
         margin-top: 3vh;
     }
 
-    #bgVideo {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    z-index: -2;
-}
-
     .hype {
-
         font-size: 10vw;
-
         margin-top: 3vh;
-
         text-align: center;
     }
 }
@@ -219,10 +173,11 @@ body {
 </head>
 
 <body>
+
 <video autoplay muted loop id="bgVideo">
     <source src="motion.mp4" type="video/mp4">
 </video>
-    
+
 <div class="container">
 
 <div class="title" style="visibility:hidden;">
@@ -269,7 +224,8 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         new Uint8Array(analyser.frequencyBinCount);
 
     let lastUpdate = 0;
-    let peakDb = 70; let peakHoldTimer = 0;
+    let peakDb = 70;
+    let peakHoldTimer = 0;
 
     function updateMeter() {
 
@@ -293,42 +249,30 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         let average =
             values / dataArray.length;
 
-        // Fake arena-style dB scaling
         let fakeDb =
             parseFloat(
                 ((average * 0.6) + 70).toFixed(1)
             );
 
-        // Clamp values
         if(fakeDb < 70) fakeDb = 70;
         if(fakeDb > 125) fakeDb = 125;
-// Peak hold logic
 
-if(fakeDb > peakDb) {
+        if(fakeDb > peakDb) {
+            peakDb = fakeDb;
+            peakHoldTimer = Date.now();
+        }
 
-    peakDb = fakeDb;
+        if(Date.now() - peakHoldTimer > 180) {
+            peakDb -= 2.8;
+        }
 
-    peakHoldTimer = Date.now();
-}
+        if(peakDb < fakeDb) {
+            peakDb = fakeDb;
+        }
 
-// Tiny hold
-if(Date.now() - peakHoldTimer > 180) {
-
-    peakDb -= 2.8;
-}
-
-if(peakDb < fakeDb) {
-
-    peakDb = fakeDb;
-}
-
-        
-
-        // Update number
         document.getElementById("dbValue")
            .innerText = peakDb.toFixed(1);
 
-        // Meter %
         let percent =
             ((peakDb - 70) / 55) * 100;
 
@@ -337,32 +281,21 @@ if(peakDb < fakeDb) {
 
         meter.style.width = percent + "%";
 
-        // Meter + number colors
         if(peakDb < 95) {
-
             meter.style.background = "lime";
-
-            document.getElementById("dbValue")
-                .style.color = "lime";
+            document.getElementById("dbValue").style.color = "lime";
         }
 
         else if(peakDb < 100) {
-
             meter.style.background = "yellow";
-
-            document.getElementById("dbValue")
-                .style.color = "yellow";
+            document.getElementById("dbValue").style.color = "yellow";
         }
 
         else {
-
             meter.style.background = "red";
-
-            document.getElementById("dbValue")
-                .style.color = "red";
+            document.getElementById("dbValue").style.color = "red";
         }
 
-        // Dynamic hype text
         let hypeText = "LET'S GO!";
 
         if(peakDb > 115) {
@@ -387,14 +320,11 @@ if(peakDb < fakeDb) {
 })
 
 .catch(function(err) {
-
     alert("Microphone access denied.");
-
     console.log(err);
 });
 
 </script>
 
 </body>
-
 </html>
