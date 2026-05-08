@@ -48,7 +48,7 @@ body {
     align-items: center;
     justify-content: flex-start;
 
-    padding-top: 50vh;
+    padding-top: 26vh;
 
     box-sizing: border-box;
 
@@ -79,42 +79,42 @@ body {
     background: linear-gradient(
         to bottom,
         #ffffff 0%,
-        #f2f2f2 30%,
-        #d4d4d4 55%,
+        #fff7df 28%,
+        #e6c878 55%,
         #ffffff 100%
     );
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
-    -webkit-text-stroke: 6px #b08a3d;
+    -webkit-text-stroke: 5px #d2aa4f;
 
     text-shadow:
-        0 3px 0 #7a5a21,
+        0 3px 0 #8a6525,
         0 6px 0 #5d4318,
-        6px 8px 14px rgba(0,0,0,0.65);
+        8px 10px 16px rgba(0,0,0,0.65);
 }
 
 .db-unit {
 
     font-family: 'Anton', sans-serif;
 
-    font-size: min(8vw, 100px);
+    font-size: min(9vw, 115px);
 
     background: linear-gradient(
         to bottom,
         #ffffff 0%,
-        #e6e6e6 45%,
-        #cfcfcf 100%
+        #fff2c7 45%,
+        #d9b35d 100%
     );
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
-    -webkit-text-stroke: 3px #b08a3d;
+    -webkit-text-stroke: 3px #d2aa4f;
 
     text-shadow:
-        0 2px 0 #7a5a21,
+        0 2px 0 #8a6525,
         0 4px 0 #5d4318,
         4px 6px 10px rgba(0,0,0,0.6);
 }
@@ -127,15 +127,15 @@ body {
 
     font-family: 'Anton', sans-serif;
 
-    font-size: min(5vw, 52px);
+    font-size: min(7vw, 78px);
 
     letter-spacing: 0.05em;
 
     color: white;
 
     text-shadow:
-        0 0 20px rgba(0,0,0,0.9),
-        4px 4px 10px rgba(0,0,0,0.6);
+        0 0 20px rgba(0,0,0,0.95),
+        5px 5px 12px rgba(0,0,0,0.75);
 
     animation: pulse 1s infinite;
 }
@@ -283,7 +283,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
         if(peakDb > 115) {
 
-            hypeText = "LET EM KNOW!";
+            hypeText = "LET EM **C**** KNOW!";
         }
 
         else if(peakDb > 105) {
