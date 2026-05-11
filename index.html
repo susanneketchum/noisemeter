@@ -278,7 +278,8 @@ navigator.mediaDevices.getUserMedia({ audio: true })
             values / dataArray.length;
 
         /* FAKE DB SCALE */
-
+let sensitivity = 0.28;
+let baseline = 52;
    let fakeDb =
     parseFloat(
         ((average * sensitivity) + baseline).toFixed(1)
