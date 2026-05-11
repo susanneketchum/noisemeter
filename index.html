@@ -281,7 +281,7 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
         let fakeDb =
             parseFloat(
-                ((average * 0.6) + 70).toFixed(1)
+                ((Math.pow(average, 0.85) * 0.45 + 70)
             );
 
         /* CLAMP */
