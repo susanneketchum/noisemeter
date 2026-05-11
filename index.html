@@ -279,10 +279,11 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 
         /* FAKE DB SCALE */
 
-        let fakeDb =
-            parseFloat(
-                ((Math.pow(average, 0.92) * 0.38 + 62)
-            );
+      let fakeDb =
+    parseFloat(
+        (
+            Math.pow(average, 0.92) * 0.38 + 62
+        ).toFixed(1)
 
         /* CLAMP */
 
